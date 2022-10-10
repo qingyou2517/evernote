@@ -32,7 +32,7 @@ import avatar from '@/components/Avatar'
 export default {
   components: {
     avatar
-  },
+ },
   data() {
     return {}
   },
@@ -45,7 +45,7 @@ export default {
 
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 #sidebar {
   position: relative;
   width: 56px;
@@ -57,12 +57,12 @@ export default {
   margin-top: 30px;
 }
 
-.icons a {
+a {
   padding: 6px 0;
   display: block;
 }
 /*点击的 router-link 背景高亮*/
-.icons .router-link-active {
+.router-link-active {
   background: #fff;
 }
 
