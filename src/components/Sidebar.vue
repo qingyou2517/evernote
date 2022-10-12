@@ -28,6 +28,7 @@
 
 <script>
 import avatar from '@/components/Avatar'
+import auth from '../apis/auth'
 
 export default {
   components: {
@@ -38,7 +39,10 @@ export default {
   },
   methods: {
     onLogout() {
-      console.log('登出')
+      auth.logout()
+        .then(data=>{
+          console.log(data)
+        })
     }
   }
 }

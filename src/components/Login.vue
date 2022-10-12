@@ -9,12 +9,12 @@
             <transition name="slide">
               <div :class="{show: isShowRegister}" class="register">
                 <input type="text" placeholder="用户名"
-                       v-model="register.username" >
+                       v-model="register.username">
                 <input type="password" placeholder="密码"
                        v-model="register.password"
-                       @keyup.enter="onRegister" >
+                       @keyup.enter="onRegister">
                 <p :class="{error: register.isError}">
-                  {{register.notice}}
+                  {{ register.notice }}
                 </p>
                 <div class="button" @click="onRegister">创建账号</div>
               </div>
@@ -23,14 +23,14 @@
             <transition name="slide">
               <div :class="{show: isShowLogin}" class="login">
                 <input type="text" placeholder="输入用户名"
-                       v-model="login.username" >
+                       v-model="login.username">
                 <input type="password" placeholder="密码"
                        v-model="login.password"
                        @keyup.enter="onLogin">
                 <p v-bind:class="{error: login.isError}">
-                  {{login.notice}}
+                  {{ login.notice }}
                 </p>
-                <div class="button"  @click="onLogin"> 登录</div>
+                <div class="button" @click="onLogin"> 登录</div>
               </div>
             </transition>
           </div>
@@ -41,13 +41,12 @@
 </template>
 
 <script>
-import request from '../helpers/request'
+import auth from '../apis/auth'
 
-request('/auth/login','POST',{username:'hunger',password:'123456'})
+auth.getInfo()
   .then(data=>{
     console.log(data)
   })
-
 
 export default {
   data() {
@@ -92,6 +91,13 @@ export default {
       this.register.isError = false
       this.register.notice = ''
       console.log(`start register..., username: ${this.register.username} , password: ${this.register.password}`)
+
+      auth.register({
+        username: this.register.username,
+        password: this.register.password
+      }).then(data=>{
+        console.log(data)
+      })
     },
     onLogin() {
       if (!/^[a-zA-Z_0-9\u4e00-\u9fa5]{3,15}$/.test(this.login.username)) {
@@ -108,6 +114,13 @@ export default {
       this.login.notice = ''
 
       console.log(`start login..., username: ${this.login.username} , password: ${this.login.password}`)
+
+      auth.login({
+        username: this.login.username,
+        password: this.login.password
+      }).then(data=>{
+        console.log(data)
+      })
     }
   }
 }
@@ -184,6 +197,7 @@ export default {
       height: 0;
       overflow: hidden;
       transition: height 0.4s;
+
       &.show {
         height: 193px;
       }
