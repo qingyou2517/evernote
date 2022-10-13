@@ -1,10 +1,13 @@
 import axios from 'axios'
+import baseURLConfig from './config-baseURL'
+
+console.log(baseURLConfig.baseURL)
 
 axios.defaults.headers.post['Content-Type']='application/x-www-form-urlencoded'
 
 //baseURL将自动加在`url`前面
 //url (如'/user') 是服务器资源目录
-axios.defaults.baseURL='https://note-server.hunger-valley.com/'
+axios.defaults.baseURL=baseURLConfig.baseURL
 //是否允许跨域
 axios.defaults.withCredentials=true
 
