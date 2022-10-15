@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 
 //本地开发、线上生产的URL
-const mockBaseURL = 'https://localhost:3000'
+const mockBaseURL = 'https://note-server.hunger-valley.com'
 const realBaseURL = 'https://note-server.hunger-valley.com'
 
 //isDev：是否开发环境
