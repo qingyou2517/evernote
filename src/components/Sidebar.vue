@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import avatar from '@/components/Avatar'
+import avatar from '../components/Avatar'
 import auth from '../apis/auth'
 
 export default {
