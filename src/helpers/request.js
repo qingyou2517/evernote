@@ -1,7 +1,7 @@
 import axios from 'axios'
 import baseURLConfig from './config-baseURL'
 
-console.log(baseURLConfig.baseURL)
+import {Message} from 'element-ui'
 
 axios.defaults.headers.post['Content-Type']='application/x-www-form-urlencoded'
 
@@ -35,17 +35,18 @@ export default function request(url,type='GET',data={}){
         if(res.status===200){
           resolve(res.data)
         }else {
-          console.error(res.data)
+          Message({
+            type:'error',
+            message:res.data.msg
+          })
           reject(res.data)
         }})
       .catch(err=>{
-        console.error({msg:'网络异常'})
+        Message({
+          type:'error',
+          message:'网络异常'
+        })
         reject({msg:'网络异常'})
       })
   })
 }
-
-// request('/auth/login','POST',{username:'hunger',password:'123456'})
-//   .then(data=>{
-//     console.log(data)
-//   })
