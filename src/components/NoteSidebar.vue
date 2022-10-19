@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import Notebooks from '../apis/notebooks'
+import Notes from '../apis/notes'
 
 export default {
   data() {
@@ -53,11 +55,24 @@ export default {
       ],
     }
   },
+  created() {
+    Notebooks.getAll()
+      .then(res => {
+        this.notebooks = res.data
+      })
+  },
   methods: {
-    handleCommand(cmd) {
-      console.log(cmd)
+    handleCommand(notebookId) {
+      if(notebookId == 'trash') {
+        return this.$router.push({ path: '/trash'})
+      }
+      Notes.getAll({ notebookId })
+        .then(res => {
+          this.notes = res.data
+        })
     },
-  }
+  },
+
 }
 
 </script>
