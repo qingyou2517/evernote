@@ -3,7 +3,7 @@
     <span class="btn add-note">添加笔记</span>
     <el-dropdown class="notebook-title" @command="handleCommand" placement="bottom">
       <span class="el-dropdown-link">
-        我的笔记本
+        {{currentBook.title}}
         <svg class="icon">
           <use xlink:href="#icon-down"></use>
         </svg>
@@ -19,7 +19,7 @@
     </div>
     <ul class="notes">
       <li v-for="note in notes">
-        <router-link :to="`/note?noteId=${note.id}`">
+        <router-link :to="`/note?noteId=${note.id}&notebookId=${currentBook.id}`">
           <span class="date">{{ note.updatedAtFriendly }}</span>
           <span class="title">{{ note.title }}</span>
         </router-link>
@@ -31,41 +31,37 @@
 <script>
 import Notebooks from '../apis/notebooks'
 import Notes from '../apis/notes'
+import Bus from '../helpers/bus'
 
 export default {
   data() {
     return {
-      notebooks: [
-        {
-          id: 1, title: 'hello1',
-        },
-        {
-          id: 2, title: 'hello2',
-        },
-      ],
-      notes: [
-        {
-          id: 11, title: '笔记1',
-          updatedAtFriendly:'刚刚'
-        },
-        {
-          id: 12, title: '笔记2',
-          updatedAtFriendly:'3分钟前'
-        },
-      ],
+      notebooks: [],
+      notes: [],
+      currentBook:{},
     }
   },
   created() {
     Notebooks.getAll()
       .then(res => {
+        //若从NotebookList点进笔记本
         this.notebooks = res.data
+        this.currentBook = this.notebooks.find(notebook => notebook.id == this.$route.query.notebookId)
+          || this.notebooks[0] || {}
+        return Notes.getAll({ notebookId: this.currentBook.id })
+      }).then(res => {
+        this.notes = res.data
+        this.$emit('update:notes', this.notes)
+        Bus.$emit('update:notes', this.notes)
       })
   },
   methods: {
+    //若从Notes点下拉菜单进入笔记本
     handleCommand(notebookId) {
       if(notebookId == 'trash') {
         return this.$router.push({ path: '/trash'})
       }
+      this.currentBook = this.notebooks.find(notebook => notebook.id == notebookId)
       Notes.getAll({ notebookId })
         .then(res => {
           this.notes = res.data
