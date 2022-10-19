@@ -1,16 +1,24 @@
 <template>
-  <div id="note-detail">
-    <h1>{{msg}}</h1>
-    <h1> notebookId: {{ $route.query.notebookId }}</h1>
-    <h1> noteId: {{ $route.query.noteId }}</h1>
+  <div id="note" class="detail">
+    <NoteSidebar></NoteSidebar>
+    <div id="note-detail">
+      <h1>{{ msg }}</h1>
+      <h1> notebookId: {{ $route.query.notebookId }}</h1>
+      <h1> noteId: {{ $route.query.noteId }}</h1>
+    </div>
+
   </div>
 </template>
 
 <script>
 import Auth from '../apis/auth'
+import NoteSidebar from './NoteSidebar'
 
 export default {
-  data () {
+  components: {
+    NoteSidebar
+  },
+  data() {
     return {
       msg: '笔记详情页'
     }
@@ -27,7 +35,10 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  color: blue;
+#note {
+  display: flex;
+  align-items: stretch;
+  background-color: #fff;
+  flex: 1;
 }
 </style>
