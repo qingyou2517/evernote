@@ -1,6 +1,6 @@
 <template>
   <div id="note" class="detail">
-    <NoteSidebar :currentNote="currentNote" @update:notes="val=>notes=val"></NoteSidebar>
+    <NoteSidebar @update:notes="val=>notes=val"></NoteSidebar>
     <div class="note-detail">
       <div class="note-bar">
         <span> 创建日期: {{ currentNote.createdAtFriendly }}</span>
