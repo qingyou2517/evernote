@@ -1,6 +1,6 @@
 <template>
   <div id="note" class="detail">
-    <NoteSidebar></NoteSidebar>
+    <NoteSidebar :currentNote="currentNote" @update:notes="val=>notes=val"></NoteSidebar>
     <div class="note-detail">
       <div class="note-bar">
         <span> 创建日期: {{ currentNote.createdAtFriendly }}</span>
@@ -15,12 +15,12 @@
       </div>
       <div class="note-title">
         <input type="text" placeholder="输入标题"
-        :value="currentNote.title">
+               v-model:value="currentNote.title">
       </div>
       <div class="editor">
         <textarea v-show="true" placeholder="输入内容, 支持markdown 语法"
-        :value="currentNote.content"></textarea>
-        <div class="preview markdown-body"  v-html="" v-show="false">
+                  v-model:value="currentNote.content"></textarea>
+        <div class="preview markdown-body" v-html="" v-show="false">
         </div>
       </div>
 
@@ -39,13 +39,8 @@ export default {
   },
   data() {
     return {
-      currentNote:{
-        title:'我的笔记',
-        content:'我的笔记内容',
-        createdAtFriendly:'1天前',
-        updatedAtFriendly:'刚刚',
-        statusText:'未更新'
-      }
+      currentNote: {},
+      notes:[],
     }
   },
   created() {
@@ -55,6 +50,11 @@ export default {
           this.$router.push({path: '/login'})
         }
       })
+  },
+  //路由守卫
+  beforeRouteUpdate(to, from, next) {
+    this.currentNote = this.notes.find(note => note.id == to.query.noteId) || {}
+    next()
   }
 }
 </script>
