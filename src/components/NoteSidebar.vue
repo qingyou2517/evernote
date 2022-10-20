@@ -51,8 +51,8 @@ export default {
         return Notes.getAll({ notebookId: this.currentBook.id })
       }).then(res => {
         this.notes = res.data
-        this.$emit('update:notes', this.notes)
-        Bus.$emit('update:notes', this.notes)
+        // this.$emit('update:notes', this.notes)
+        // Bus.$emit('update:notes', this.notes)
       })
   },
   methods: {
@@ -65,6 +65,7 @@ export default {
       Notes.getAll({ notebookId })
         .then(res => {
           this.notes = res.data
+          // this.$emit('update:notes', this.notes)
         })
     },
   },
