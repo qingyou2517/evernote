@@ -32,6 +32,7 @@
 <script>
 import Auth from '../apis/auth'
 import NoteSidebar from './NoteSidebar'
+import Bus from '../helpers/bus'
 
 export default {
   components: {
@@ -50,6 +51,9 @@ export default {
           this.$router.push({path: '/login'})
         }
       })
+    Bus.$once('update:notes',val=>{
+      this.currentNote = val.find(note => note.id == this.$route.query.noteId) || {}
+    })
   },
   //路由守卫
   beforeRouteUpdate(to, from, next) {
