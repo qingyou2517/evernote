@@ -2,30 +2,32 @@
   <div id="note" class="detail">
     <NoteSidebar @update:notes="val=>notes=val"></NoteSidebar>
     <div class="note-detail">
-      <div class="note-bar">
-        <span> 创建日期: {{ currentNote.createdAtFriendly }}</span>
-        <span> 更新日期: {{ currentNote.updatedAtFriendly }}</span>
-        <span> {{ currentNote.statusText }}</span>
-        <svg class="icon">
-          <use xlink:href="#icon-fullscreen"></use>
-        </svg>
-        <svg class="icon">
-          <use xlink:href="#icon-trash"></use>
-        </svg>
-      </div>
-      <div class="note-title">
-        <input type="text" placeholder="输入标题"
-               v-model:value="currentNote.title">
-      </div>
-      <div class="editor">
+      <div class="note-empty" v-show="!currentNote.id">请选择笔记</div>
+      <div v-show="currentNote.id">
+        <div class="note-bar">
+          <span> 创建日期: {{ currentNote.createdAtFriendly }}</span>
+          <span> 更新日期: {{ currentNote.updatedAtFriendly }}</span>
+          <span> {{ currentNote.statusText }}</span>
+          <svg class="icon">
+            <use xlink:href="#icon-fullscreen"></use>
+          </svg>
+          <svg class="icon">
+            <use xlink:href="#icon-trash"></use>
+          </svg>
+        </div>
+        <div class="note-title">
+          <input type="text" placeholder="输入标题"
+                 v-model:value="currentNote.title">
+        </div>
+        <div class="editor">
         <textarea v-show="true" placeholder="输入内容, 支持markdown 语法"
                   v-model:value="currentNote.content"></textarea>
-        <div class="preview markdown-body" v-html="" v-show="false">
+          <div class="preview markdown-body" v-html="" v-show="false">
+          </div>
         </div>
       </div>
 
     </div>
-
   </div>
 </template>
 
