@@ -1,6 +1,6 @@
 <template>
   <div class="note-sidebar">
-    <span class="btn add-note">添加笔记</span>
+    <span class="btn add-note" @click="addNote">添加笔记</span>
     <el-dropdown class="notebook-title" @command="handleCommand" placement="bottom">
       <span class="el-dropdown-link">
         {{currentBook.title}}
@@ -68,6 +68,13 @@ export default {
           this.$emit('update:notes', this.notes)
         })
     },
+    addNote(){
+      Notes.addNote({ notebookId: this.currentBook.id })
+        .then(res => {
+          console.log(res)
+          this.notes.unshift(res.data)
+        })
+    }
   },
 
 }
