@@ -8,7 +8,7 @@
           <span> 创建日期: {{ currentNote.createdAtFriendly }}</span>
           <span> 更新日期: {{ currentNote.updatedAtFriendly }}</span>
           <span> {{ statusText }}</span>
-          <svg class="icon">
+          <svg class="icon" @click="isShowPreview=!isShowPreview">
             <use xlink:href="#icon-fullscreen"></use>
           </svg>
           <svg class="icon" @click="deleteNote">
@@ -21,10 +21,10 @@
                  @input="updateNote" @keydown="statusText='编辑中...'">
         </div>
         <div class="editor">
-        <textarea v-show="true" placeholder="输入内容, 支持markdown 语法"
+        <textarea v-show="!isShowPreview" placeholder="输入内容, 支持markdown 语法"
                   v-model:value="currentNote.content"
                   @input="updateNote" @keydown="statusText='编辑中...'"></textarea>
-          <div class="preview markdown-body" v-html="" v-show="false">
+          <div class="preview markdown-body" v-html="previewContent" v-show="isShowPreview">
           </div>
         </div>
       </div>
@@ -39,6 +39,9 @@ import NoteSidebar from './NoteSidebar'
 import Bus from '../helpers/bus'
 import _ from 'lodash'
 import Notes from '../apis/notes'
+import MarkdownIt from 'markdown-it'
+
+let md = new MarkdownIt()
 
 export default {
   components: {
@@ -48,7 +51,8 @@ export default {
     return {
       currentNote: {},
       notes: [],
-      statusText:'笔记未改动',
+      statusText: '笔记未改动',
+      isShowPreview: false,
     }
   },
   created() {
@@ -62,12 +66,17 @@ export default {
       this.currentNote = val.find(note => note.id == this.$route.query.noteId) || {}
     })
   },
+  computed: {
+    previewContent() {
+      return md.render(this.currentNote.content||'')
+    },
+  },
   methods: {
     //引入节流：自动保存笔记时，不必每输一个字符都向服务器发请求
     //只有停止输入，才会发请求
     updateNote: _.debounce(function () {
-      Notes.updateNote({ noteId: this.currentNote.id },
-        { title: this.currentNote.title, content: this.currentNote.content })
+      Notes.updateNote({noteId: this.currentNote.id},
+        {title: this.currentNote.title, content: this.currentNote.content})
         .then(data => {
           this.statusText = '已保存'
         }).catch(data => {
@@ -75,12 +84,12 @@ export default {
       })
     }, 300),
 
-    deleteNote(){
-      Notes.deleteNote({ noteId: this.currentNote.id })
+    deleteNote() {
+      Notes.deleteNote({noteId: this.currentNote.id})
         .then(data => {
           this.$message.success(data.msg)
           this.notes.splice(this.notes.indexOf(this.currentNote), 1)
-          this.$router.replace({ path: '/note' })
+          this.$router.replace({path: '/note'})
         })
     }
   },
