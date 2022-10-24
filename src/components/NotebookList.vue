@@ -22,7 +22,7 @@
               <span>{{ notebook.noteCounts }}</span>
               <span class="action" @click.stop.prevent="onEdit(notebook)">改标题</span>
               <span class="action" @click.stop.prevent="onDelete(notebook)">删除</span>
-              <span class="date">{{ notebook.friendlyCreatedAt }}</span>
+              <span class="date">{{ notebook.createdAtFriendly }}</span>
             </div>
           </router-link>
         </div>
@@ -37,11 +37,12 @@
 import Auth from '../apis/auth'
 import Notebooks from '../apis/notebooks'
 import {friendlyDate} from '../helpers/util'
+import {mapState,mapActions,mapGetters} from 'vuex'
 
 export default {
   data() {
     return {
-      notebooks: [],
+      // notebooks: [],
     }
   },
   created() {
@@ -51,12 +52,22 @@ export default {
           this.$router.push({path: '/login'})
         }
       })
-    Notebooks.getAll()
-      .then(res => {
-        this.notebooks = res.data
-      })
+
+    this.$store.dispatch('getNotebooks')
   },
+  //想在组件中get store 中的state,需要在计算属性中访问
+  computed:{
+    ...mapGetters(['notebooks'])
+  },
+
   methods: {
+    //组件中分发action
+    ...mapActions([
+      'getNotebooks',
+      'addNotebook',
+      'updateNotebook',
+      'deleteNotebook'
+    ]),
     onCreate() {
       this.$prompt('请输入笔记本标题', '创建笔记本', {
         confirmButtonText: '确定',
@@ -64,14 +75,7 @@ export default {
         inputPattern: /^.{1,30}$/,
         inputErrorMessage: '标题不能为空，且不超过30个字符'
       }).then(({value}) => {
-        return Notebooks.addNotebook({title: value})
-      }).then(res => {
-        res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt)
-        this.notebooks.unshift(res.data)
-        this.$message({
-          type: 'success',
-          message: res.msg
-        })
+        this.addNotebook({title:value})
       })
     },
     onDelete(notebook) {
@@ -80,17 +84,10 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        return Notebooks.deleteNotebook(notebook.id)
-      }).then(res => {
-        this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
+        this.deleteNotebook({notebookId :notebook.id})
       })
     },
     onEdit(notebook) {
-      let newTitle = ''
       this.$prompt('请修改笔记本标题', '修改笔记本', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -98,14 +95,7 @@ export default {
         inputErrorMessage: '标题不能为空，且不超过30个字符',
         inputValue: notebook.title,
       }).then(({value}) => {
-        newTitle = value
-        return Notebooks.updateNotebook(notebook.id, {title: newTitle})
-      }).then(res => {
-        notebook.title = newTitle
-        this.$message({
-          type: 'success',
-          message: res.msg
-        })
+        this.updateNotebook({notebookId:notebook.id, title: value})
       })
     },
 
