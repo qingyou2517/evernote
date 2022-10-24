@@ -1,9 +1,9 @@
 <template>
   <div class="note-sidebar">
-    <span class="btn add-note" @click="addNote">添加笔记</span>
+    <span class="btn add-note" @click="onAddNote">添加笔记</span>
     <el-dropdown class="notebook-title" @command="handleCommand" placement="bottom">
       <span class="el-dropdown-link">
-        {{currentBook.title}}
+        {{ currentBook.title }}
         <svg class="icon">
           <use xlink:href="#icon-down"></use>
         </svg>
@@ -32,48 +32,48 @@
 import Notebooks from '../apis/notebooks'
 import Notes from '../apis/notes'
 import Bus from '../helpers/bus'
+import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
 
 export default {
   data() {
-    return {
-      notebooks: [],
-      notes: [],
-      currentBook:{},
-    }
+    return {}
   },
   created() {
-    Notebooks.getAll()
-      .then(res => {
-        //若从NotebookList点进笔记本
-        this.notebooks = res.data
-        this.currentBook = this.notebooks.find(notebook => notebook.id == this.$route.query.notebookId)
-          || this.notebooks[0] || {}
-        return Notes.getAll({ notebookId: this.currentBook.id })
-      }).then(res => {
-        this.notes = res.data
-        this.$emit('update:notes', this.notes)
-        Bus.$emit('update:notes', this.notes)
+    //若从NotebookList点进笔记本
+    this.getNotebooks()
+      .then(() => {
+        this.$store.commit('setCurrentBookId',{ currentBookId: this.$route.query.notebookId })
+        return this.getNotes({ notebookId: this.currentBook.id})
       })
+    //   .then(() => {
+    //   this.setCurrentNoteId({ currentNoteId: this.$route.query.noteId })
+    // })
+
+  },
+  computed:{
+    ...mapGetters([
+      'notebooks',
+      'notes',
+      'currentBook'
+    ])
   },
   methods: {
+    ...mapActions([
+      'getNotes',
+      'getNotebooks',
+      'addNote'
+    ]),
+
     //若从Notes点下拉菜单进入笔记本
     handleCommand(notebookId) {
-      if(notebookId == 'trash') {
-        return this.$router.push({ path: '/trash'})
+      if (notebookId == 'trash') {
+        return this.$router.push({path: '/trash'})
       }
-      this.currentBook = this.notebooks.find(notebook => notebook.id == notebookId)
-      Notes.getAll({ notebookId })
-        .then(res => {
-          this.notes = res.data
-          this.$emit('update:notes', this.notes)
-        })
+      this.$store.commit('setCurrentBookId', { currentBookId: notebookId})
+      this.getNotes({ notebookId })
     },
-    addNote(){
-      Notes.addNote({ notebookId: this.currentBook.id })
-        .then(res => {
-          console.log(res)
-          this.notes.unshift(res.data)
-        })
+    onAddNote() {
+      this.addNote({ notebookId: this.currentBook.id })
     }
   },
 

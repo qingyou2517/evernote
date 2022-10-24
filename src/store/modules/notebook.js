@@ -2,18 +2,20 @@ import Notebook from '../../apis/notebooks'
 import { Message } from 'element-ui'
 
 const state = {
-  notebooks: [],
-  // curBookId: null
+  notebooks: null,
+  currentBookId: null
 }
 //获取：读
 const getters = {
   notebooks: state => state.notebooks || [],
 
-  // curBook: state => {
-  //   if(!Array.isArray(state.notebooks)) return {}
-  //   if(!state.curBookId) return state.notebooks[0] || {}
-  //   return state.notebooks.find(notebook => notebook.id == state.curBookId) || {}
-  // }
+  currentBook: state => {
+    if(!Array.isArray(state.notebooks)) return {}
+    //比如删干净了，导致notebooks为空数组
+    if(!state.currentBookId) return state.notebooks[0] || {}
+    //注意currentBookId是字符串，notebook.id是数字，二者不能用全等号'==='，下面均如此
+    return state.notebooks.find(notebook => notebook.id == state.currentBookId) || {}
+  }
 }
 
 const mutations = {
@@ -34,8 +36,8 @@ const mutations = {
     state.notebooks = state.notebooks.filter(notebook => notebook.id != payload.notebookId)
   },
 
-  setCurBook(state, payload) {
-    state.curBookId = payload.curBookId
+  setCurrentBookId(state, payload) {
+    state.currentBookId = payload.currentBookId
   }
 }
 
