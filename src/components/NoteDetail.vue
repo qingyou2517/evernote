@@ -34,13 +34,10 @@
 </template>
 
 <script>
-import Auth from '../apis/auth'
 import NoteSidebar from './NoteSidebar'
-import Bus from '../helpers/bus'
 import _ from 'lodash'
-import Notes from '../apis/notes'
 import MarkdownIt from 'markdown-it'
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import { mapGetters, mapMutations, mapActions} from 'vuex'
 
 let md = new MarkdownIt()
 
@@ -55,12 +52,7 @@ export default {
     }
   },
   created() {
-    Auth.getInfo()
-      .then(res => {
-        if (!res.isLogin) {
-          this.$router.push({path: '/login'})
-        }
-      })
+    this.checkLogin({path:'/login'})
   },
   computed: {
     ...mapGetters([
@@ -78,7 +70,8 @@ export default {
     ]),
     ...mapActions([
       'updateNote',
-      'deleteNote'
+      'deleteNote',
+      'checkLogin'
     ]),
 
     //引入节流：自动保存笔记时，不必每输一个字符都向服务器发请求

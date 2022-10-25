@@ -46,14 +46,8 @@ export default {
     }
   },
   created() {
-    Auth.getInfo()
-      .then(res => {
-        if (!res.isLogin) {
-          this.$router.push({path: '/login'})
-        }
-      })
-
-    this.$store.dispatch('getNotebooks')
+    this.checkLogin({path:'/login'})
+    this.getNotebooks()
   },
   //想在组件中get store 中的state,需要在计算属性中访问
   computed:{
@@ -69,7 +63,8 @@ export default {
       'getNotebooks',
       'addNotebook',
       'updateNotebook',
-      'deleteNotebook'
+      'deleteNotebook',
+      'checkLogin'
     ]),
     onCreate() {
       this.$prompt('请输入笔记本标题', '创建笔记本', {

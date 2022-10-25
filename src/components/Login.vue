@@ -3,7 +3,9 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-          <div class="main"></div>
+          <div class="main">
+
+          </div>
           <div class="form">
             <h3 @click="showRegister">创建账户</h3>
             <transition name="slide">
@@ -43,11 +45,7 @@
 <script>
 import auth from '../apis/auth'
 import Bus from '../helpers/bus'
-
-auth.getInfo()
-  .then(data => {
-    console.log(data)
-  })
+import {mapGetters,mapMutations,mapActions} from 'vuex'
 
 export default {
   data() {
@@ -70,6 +68,11 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      //对方法重命名，防止方法和data里的数据相冲突
+      loginUser:'login',
+      registerUser:'register'
+    }),
     showLogin() {
       this.isShowLogin = true
       this.isShowRegister = false
@@ -89,13 +92,12 @@ export default {
         this.register.notice = '密码长度为6~16个字符'
         return
       }
-      auth.register({
+      this.registerUser({
         username: this.register.username,
         password: this.register.password
-      }).then(data => {
+      }).then(() => {
         this.register.isError = false
         this.register.notice = ''
-        Bus.$emit('userInfo', {username: this.register.username})
         this.$router.push({path: '/notebooks'})
       }).catch(data => {
         this.register.isError = true
@@ -113,13 +115,12 @@ export default {
         this.login.notice = '密码长度为6~16个字符'
         return
       }
-      auth.login({
+      this.loginUser({
         username: this.login.username,
         password: this.login.password
-      }).then(data => {
+      }).then(() => {
         this.login.isError = false
         this.login.notice = ''
-        Bus.$emit('userInfo', {username: this.login.username})
         this.$router.push({path: '/notebooks'})
       }).catch(data => {
         this.login.isError = true
@@ -161,7 +162,7 @@ export default {
 
   .main {
     flex: 1;
-    background: #36bc64 url(//cloud.hunger-valley.com/17-12-13/38476998.jpg-middle) center center no-repeat;
+    background:#a6c2f2 url(../assets/notebook.jpg) center center no-repeat;
     background-size: contain;
   }
 
@@ -184,7 +185,7 @@ export default {
     }
 
     .button {
-      background-color: #2bb964;
+      background-color: #88b7ff;
       height: 36px;
       line-height: 36px;
       text-align: center;
