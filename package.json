@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "element-ui": "^2.3.4",
+    "lodash": "^4.17.21",
     "markdown-it": "^13.0.1",
     "path": "^0.12.7",
     "vue": "^2.5.2",

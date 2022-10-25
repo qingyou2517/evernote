@@ -2,18 +2,18 @@ import Note from '@/apis/notes'
 import { Message } from 'element-ui'
 
 const state = {
-  notes: [],
-  currentNote: {}
+  notes: null,
+  currentNoteId: null
 }
 
 const getters = {
   notes: state => state.notes,
 
-  // curNote: state => {
-  //   if(!Array.isArray(state.notes)) return {}
-  //   if(!state.currNoteId) return state.notes[0] || {}
-  //   return state.notes.find(note => note.id == state.currentNote) || {}
-  // }
+  currentNote: state => {
+    if(!Array.isArray(state.notes)) return {}
+    if(!state.currentNoteId) return state.notes[0] || {}
+    return state.notes.find(note => note.id == state.currentNoteId) || {}
+  }
 }
 
 const mutations = {
@@ -35,7 +35,7 @@ const mutations = {
     state.notes = state.notes.filter(note => note.id !== payload.noteId)
   },
 
-  setCurrNoteId(state, payload) {
+  setCurrentNoteId(state, payload) {
     state.currentNoteId = payload.currentNoteId
   }
 
@@ -65,9 +65,9 @@ const actions = {
   },
 
   deleteNote({ commit }, { noteId }) {
-    return Note.deleteNotebook({ noteId })
+    return Note.deleteNote({ noteId })
       .then(res => {
-        commit('deleteNotebook', { noteId })
+        commit('deleteNote', { noteId })
         Message.success(res.msg)
       })
   }

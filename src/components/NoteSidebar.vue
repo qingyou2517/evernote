@@ -42,12 +42,11 @@ export default {
     //若从NotebookList点进笔记本
     this.getNotebooks()
       .then(() => {
-        this.$store.commit('setCurrentBookId',{ currentBookId: this.$route.query.notebookId })
+        this.setCurrentBookId({ currentBookId: this.$route.query.notebookId })
         return this.getNotes({ notebookId: this.currentBook.id})
-      })
-    //   .then(() => {
-    //   this.setCurrentNoteId({ currentNoteId: this.$route.query.noteId })
-    // })
+      }).then(() => {
+      this.setCurrentNoteId({ currentNoteId: this.$route.query.noteId })
+    })
 
   },
   computed:{
@@ -58,6 +57,10 @@ export default {
     ])
   },
   methods: {
+    ...mapMutations([
+      'setCurrentBookId',
+      'setCurrentNoteId'
+    ]),
     ...mapActions([
       'getNotes',
       'getNotebooks',

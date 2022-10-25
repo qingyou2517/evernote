@@ -57,11 +57,14 @@ export default {
   },
   //想在组件中get store 中的state,需要在计算属性中访问
   computed:{
+    //notebooks不再从data()里获取，而是从vuex的store里获取
+    //mapGetters()参数对应getters读取的内容
     ...mapGetters(['notebooks'])
   },
 
   methods: {
     //组件中分发action
+    //map之后，里面的xxx方法就可以直接用this.xxx来调用，而无需this.$store.commit('xxx')
     ...mapActions([
       'getNotebooks',
       'addNotebook',
