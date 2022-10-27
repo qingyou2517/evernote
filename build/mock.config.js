@@ -2,8 +2,8 @@ const fs = require('fs')
 const path = require('path')
 
 //本地开发、线上生产的URL
-const mockBaseURL = 'https://note-server.hunger-valley.com'
-const realBaseURL = 'https://note-server.hunger-valley.com'
+const mockBaseURL = '//note-server.hunger-valley.com'
+const realBaseURL = '//note-server.hunger-valley.com'
 
 //isDev：是否开发环境
 //向外exports一个对象，该对象内的config是函数
