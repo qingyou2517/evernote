@@ -101,7 +101,7 @@ export default {
         .then(() => {
           this.setCurTrashNote()
 
-          this.$router.replace({
+          this.$router.replace({ //改变url，会触发路由守卫
             path: '/trash',
             query: { noteId: this.curTrashNote.id }
           }).catch(err=>{})
