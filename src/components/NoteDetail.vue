@@ -2,7 +2,8 @@
   <div id="note" class="detail">
     <NoteSidebar @update:notes="val=>notes=val"></NoteSidebar>
     <div class="note-detail">
-      <div class="note-empty" v-show="!currentNote.id">请选择笔记</div>
+      <div class="note-empty" v-show="!currentBook.id">请创建笔记本后</div>
+      <div class="note-empty" v-show="!currentNote.id">选择或创建笔记</div>
       <div class="note-detail-ct" v-show="currentNote.id">
         <div class="note-bar">
           <span> 创建日期: {{ currentNote.createdAtFriendly }}</span>
@@ -57,7 +58,8 @@ export default {
   computed: {
     ...mapGetters([
       'notes',
-      'currentNote'
+      'currentNote',
+      'currentBook',
     ]),
 
     previewContent() {

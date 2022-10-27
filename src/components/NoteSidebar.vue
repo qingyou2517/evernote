@@ -1,7 +1,8 @@
 <template>
   <div class="note-sidebar">
-    <span class="btn add-note" @click="onAddNote">添加笔记</span>
-    <el-dropdown class="notebook-title" @command="handleCommand" placement="bottom">
+    <span v-if="currentBook.id" class="btn add-note" @click="onAddNote">添加笔记</span>
+    <span v-if="!currentBook.id" class="notebook-title">无笔记本</span>
+    <el-dropdown v-if="currentBook.id" class="notebook-title" @command="handleCommand" placement="bottom">
       <span class="el-dropdown-link">
         {{ currentBook.title }}
         <svg class="icon">
@@ -13,6 +14,7 @@
         <el-dropdown-item command="trash">回收站</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
+
     <div class="menu">
       <div>更新时间</div>
       <div>标题</div>
@@ -40,7 +42,7 @@ export default {
     this.getNotebooks()
       .then(() => {
         this.setCurrentBookId({ currentBookId: this.$route.query.notebookId })
-        return this.getNotes({ notebookId: this.currentBook.id})
+        if(this.currentBook.id) return this.getNotes({ notebookId: this.currentBook.id})
       }).then(() => {
       this.setCurrentNoteId({ currentNoteId: this.$route.query.noteId })
       this.$router.replace({
@@ -75,7 +77,7 @@ export default {
     //若从Notes点下拉菜单进入笔记本
     handleCommand(notebookId) {
       if (notebookId == 'trash') {
-        return this.$router.push({path: '/trash'})
+        return this.$router.push({path: '/trash'}).catch(err=>{})
       }
       this.$store.commit('setCurrentBookId', { currentBookId: notebookId})
       this.getNotes({ notebookId })
