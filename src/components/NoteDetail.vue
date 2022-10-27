@@ -77,8 +77,9 @@ export default {
     //引入节流：自动保存笔记时，不必每输一个字符都向服务器发请求
     //只有停止输入，才会发请求
     onUpdateNote: _.debounce(function () {
+      if(!this.currentNote.id) return
       this.updateNote({noteId: this.currentNote.id, title: this.currentNote.title, content: this.currentNote.content})
-        .then(data => {
+        .then(() => {
           this.statusText = '已保存'
         }).catch(data => {
         this.statusText = '保存出错'

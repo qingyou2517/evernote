@@ -32,6 +32,15 @@ const actions = {
       })
   },
 
+  logout({ commit }, payload = { path: '/login' }) {
+    return Auth.logout()
+      .then(res => {
+        commit('setUser', { user: null })
+        // console.log(payload)
+        router.push(payload)
+      })
+  },
+
   checkLogin({ commit }, payload) {
     return Auth.getInfo()
       .then(res => {

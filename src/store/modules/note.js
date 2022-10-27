@@ -1,5 +1,5 @@
 import Note from '@/apis/notes'
-import { Message } from 'element-ui'
+import {Message} from 'element-ui'
 
 const state = {
   notes: null,
@@ -10,9 +10,9 @@ const getters = {
   notes: state => state.notes,
 
   currentNote: state => {
-    if(!Array.isArray(state.notes)) return {}
-    if(!state.currentNoteId) return state.notes[0] || {}
-    return state.notes.find(note => note.id == state.currentNoteId) || {}
+    if (!Array.isArray(state.notes)) return {title: '', content: ''}
+    if (!state.currentNoteId) return state.notes[0] || {title: '', content: ''}
+    return state.notes.find(note => note.id == state.currentNoteId) || {title: '', content: ''}
   }
 }
 
@@ -35,39 +35,39 @@ const mutations = {
     state.notes = state.notes.filter(note => note.id !== payload.noteId)
   },
 
-  setCurrentNoteId(state, payload) {
+  setCurrentNoteId(state, payload = {}) {
     state.currentNoteId = payload.currentNoteId
   }
 
 }
 
 const actions = {
-  getNotes({ commit }, { notebookId }) {
-    return Note.getAll({ notebookId })
+  getNotes({commit}, {notebookId}) {
+    return Note.getAll({notebookId})
       .then(res => {
-        commit('setNote', { notes: res.data })
+        commit('setNote', {notes: res.data})
       })
   },
 
-  addNote({ commit }, { notebookId, title, content }) {
-    return Note.addNote({ notebookId }, { title, content })
+  addNote({commit}, {notebookId, title, content}) {
+    return Note.addNote({notebookId}, {title, content})
       .then(res => {
         // console.log('add success...', res)
-        commit('addNote', { note: res.data })
+        commit('addNote', {note: res.data})
       })
   },
 
-  updateNote({ commit }, { noteId, title, content }) {
-    return Note.updateNote({ noteId }, { title, content })
+  updateNote({commit}, {noteId, title, content}) {
+    return Note.updateNote({noteId}, {title, content})
       .then(res => {
-        commit('updateNote', { noteId, title, content })
+        commit('updateNote', {noteId, title, content})
       })
   },
 
-  deleteNote({ commit }, { noteId }) {
-    return Note.deleteNote({ noteId })
+  deleteNote({commit}, {noteId}) {
+    return Note.deleteNote({noteId})
       .then(res => {
-        commit('deleteNote', { noteId })
+        commit('deleteNote', {noteId})
         Message.success(res.msg)
       })
   }

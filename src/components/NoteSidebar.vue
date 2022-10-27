@@ -29,10 +29,7 @@
 </template>
 
 <script>
-import Notebooks from '../apis/notebooks'
-import Notes from '../apis/notes'
-import Bus from '../helpers/bus'
-import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
+import { mapActions, mapGetters, mapMutations} from 'vuex'
 
 export default {
   data() {
@@ -46,6 +43,13 @@ export default {
         return this.getNotes({ notebookId: this.currentBook.id})
       }).then(() => {
       this.setCurrentNoteId({ currentNoteId: this.$route.query.noteId })
+      this.$router.replace({
+        path: '/note',
+        query: {
+          noteId: this.currentNote.id,
+          notebookId: this.currentBook.id
+        }
+      }).catch(err=>{})
     })
 
   },
@@ -53,7 +57,8 @@ export default {
     ...mapGetters([
       'notebooks',
       'notes',
-      'currentBook'
+      'currentBook',
+      'currentNote'
     ])
   },
   methods: {
@@ -74,6 +79,17 @@ export default {
       }
       this.$store.commit('setCurrentBookId', { currentBookId: notebookId})
       this.getNotes({ notebookId })
+        .then(() => {
+          //切换笔记本而没有选择笔记时，noteId、notebookId均未变，故此时不该 setCurrentNoteId
+          this.setCurrentNoteId()
+          this.$router.replace({
+            path: '/note',
+            query: {
+              noteId: this.currentNote.id,
+              notebookId: this.currentBook.id
+            }
+          }).catch(err=>{})
+        })
     },
     onAddNote() {
       this.addNote({ notebookId: this.currentBook.id })

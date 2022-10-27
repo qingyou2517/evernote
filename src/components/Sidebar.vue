@@ -29,6 +29,7 @@
 <script>
 import avatar from '../components/Avatar'
 import auth from '../apis/auth'
+import {mapActions} from 'vuex'
 
 export default {
   components: {
@@ -38,11 +39,11 @@ export default {
     return {}
   },
   methods: {
+    ...mapActions([
+      'logout'
+    ]),
     onLogout() {
-      auth.logout()
-        .then(data=>{
-          this.$router.push({path:'/login'})
-        })
+      this.logout({ path: '/login' })
     }
   }
 }

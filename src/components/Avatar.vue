@@ -3,9 +3,7 @@
 </template>
 
 <script>
-import Auth from '../apis/auth'
-import Bus from '../helpers/bus'
-import {mapGetters,mapActions,mapMutations} from 'vuex'
+import {mapGetters,mapActions} from 'vuex'
 
 export default {
   data() {
