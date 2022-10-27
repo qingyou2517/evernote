@@ -37,7 +37,7 @@ const actions = {
       .then(res => {
         commit('setUser', { user: null })
         // console.log(payload)
-        router.push(payload)
+        router.push(payload).catch(err=>{})
       })
   },
 
@@ -45,7 +45,7 @@ const actions = {
     return Auth.getInfo()
       .then(res => {
         if(!res.isLogin) {
-          router.push(payload)
+          router.push(payload).catch(err=>{})
         } else {
           commit('setUser', { user: res.data })
         }
