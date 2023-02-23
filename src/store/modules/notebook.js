@@ -1,5 +1,7 @@
 import Notebook from '../../apis/notebooks'
 import {Message} from 'element-ui'
+import store from '@/store'
+import Vue from 'vue'
 
 const state = {
   notebooks: null,
@@ -55,6 +57,15 @@ const actions = {
   addNotebook({commit}, payload) {
     return Notebook.addNotebook({title: payload.title})
       .then(res => {
+        const titles=state.notebooks.map(item=>item.title)
+        if (titles.indexOf(payload.title) >= 0) {
+          Vue.prototype.$message({
+            type: 'error',
+            message: '亲，笔记本命名重复哦',
+            duration: 2000,
+          });
+          return;
+        }
         commit('addNotebook', {notebook: res.data})
         Message.success(res.msg)
       })
@@ -65,6 +76,15 @@ const actions = {
   updateNotebook({commit}, payload) {
     return Notebook.updateNotebook(payload.notebookId, {title: payload.title})
       .then(res => {
+        const titles=state.notebooks.map(item=>item.title)
+        if (titles.indexOf(payload.title) >= 0) {
+          Vue.prototype.$message({
+            type: 'error',
+            message: '亲，笔记本命名重复哦',
+            duration: 2000,
+          });
+          return;
+        }
         commit('updateNotebook', {notebookId: payload.notebookId, title: payload.title})
         Message.success(res.msg)
       })

@@ -55,7 +55,7 @@ export default {
   position: relative;
   width: 56px;
   text-align: center;
-  background-color: #add8e6;
+  background: #d6e4ff;
 }
 
 .icons {
@@ -72,8 +72,8 @@ a {
 }
 
 .icon {
-  width: 1.3em;
-  height: 1.3em;
+  width: 1.5em;
+  height: 1.5em;
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;

@@ -89,7 +89,7 @@ export default {
         inputValue: notebook.title,
       }).then(({value}) => {
         this.updateNotebook({notebookId:notebook.id, title: value})
-      })
+      }).catch((err)=>{console.log(err)})
     },
 
   }
